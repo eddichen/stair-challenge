@@ -3,13 +3,15 @@ import ReactDOM from 'react-dom';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import App from './components/App';
-import Register from "./components/Register";
+import StairForm from "./components/StairForm";
+import StairConfirmation from './components/StairConfirmation';
 
 const router = (
   <Router>
     <div>
       <Route exact path="/" component={App}/>
-      <Route path="/register" component={Register} />
+      <Route path="/stair-form" component={StairForm} />
+      <Route path="/stair-confirmation" component={StairConfirmation} />
     </div>
   </Router>
 )
