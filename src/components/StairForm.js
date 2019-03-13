@@ -64,7 +64,8 @@ class StairForm extends Component {
     const db = firebaseApp.firestore();
     db.collection("users").add({
       uid: this.state.googleUser.uid,
-      climbs: this.state.date,
+      name: this.state.googleUser.displayName,
+      date: this.state.date,
       floors: this.state.floors
     })
     this.setState({

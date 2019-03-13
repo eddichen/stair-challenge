@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import App from './components/App';
 import StairForm from "./components/StairForm";
 import StairConfirmation from './components/StairConfirmation';
+import UserDashboard from "./components/UserDashboard";
 
 const router = (
   <Router>
@@ -12,6 +13,7 @@ const router = (
       <Route exact path="/" component={App}/>
       <Route path="/stair-form" component={StairForm} />
       <Route path="/stair-confirmation" component={StairConfirmation} />
+      <Route path="/user-dashboard" component={UserDashboard} />
     </div>
   </Router>
 )
