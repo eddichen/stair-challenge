@@ -8,7 +8,8 @@ class StairForm extends Component {
     this.state = {
       googleUser: null,
       floors: 0,
-      date: this.getDefaultDate()
+      date: this.getDefaultDate(),
+      climbs: null
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -19,8 +20,30 @@ class StairForm extends Component {
     auth.onAuthStateChanged((googleUser) => {
       if (googleUser) {
         this.setState({ googleUser });
+        this.getUserData();
       } 
     });
+  }
+
+  getUserData() {
+    const db = firebaseApp.firestore();
+    const uid = this.state.googleUser.uid;
+
+    db.collection("users").doc(uid).get().then((user) => {
+        const climbData = [];
+        const userClimbs = user.data().climbs;
+        userClimbs.forEach((climb) => {
+          const climbDate = climb.date;
+          climbData.push({ 
+            date: climbDate,
+            floors: parseInt(climb.floors)
+          })
+        })
+
+        this.setState({
+          climbs: climbData
+        })
+    })
   }
 
   signIn() {
@@ -62,16 +85,19 @@ class StairForm extends Component {
     }
 
     const db = firebaseApp.firestore();
-    db.collection("users").add({
+
+    db.collection("users").doc(this.state.googleUser.uid).set({
       uid: this.state.googleUser.uid,
       name: this.state.googleUser.displayName,
-      date: this.state.date,
-      floors: this.state.floors
+      climbs: [...this.state.climbs, {
+        date: this.state.date,
+        floors: parseInt(this.state.floors)
+      }]
     })
     this.setState({
       floors: 0
     })
-    this.props.history.push("/stair-confirmation");
+    this.props.history.push("/user-dashboard");
   }
 
   render() {

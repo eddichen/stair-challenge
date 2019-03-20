@@ -15,30 +15,19 @@ class UserDashboard extends Component {
     auth.onAuthStateChanged((googleUser) => {
       if (googleUser) {
         this.setState({ googleUser });
-        this.getUserData();
+        this.getClimbData();
       } 
     });
   }
 
-  getUserData() {
+  getClimbData() {
     const db = firebaseApp.firestore();
     const uid = this.state.googleUser.uid;
 
-    db.collection("users").where("uid", "==", uid).get().then((climbs) => {
-        const climbData = [];
-        climbs.forEach((climb) => {
-          const climbDate = climb.data().date;
-          climbData.push({ 
-            [climbDate]: [{
-              floors: parseInt(climb.data().floors)
-            }]
-          })
-        })
-
-        this.setState({
-          climbs: climbData
-        })
-        console.log(this.state.climbs);
+    db.collection("users").doc(uid).get().then((user) => {
+      this.setState({
+        climbs: user.data().climbs
+      })
     })
   }
 
@@ -57,12 +46,12 @@ class UserDashboard extends Component {
               </tr>
             </thead>
             <tbody>
-                {/* {this.state.climbs !== null ? (this.state.climbs.map(date => (
-                  <tr key={date}>
-                    <td>{date}</td> 
-                    <td>{this.state.climbs[date].floors}</td> 
+                {this.state.climbs !== null ? (this.state.climbs.map((climb, index) => (
+                  <tr key={index}>
+                    <td>{climb.date}</td> 
+                    <td>{climb.floors}</td> 
                   </tr>
-                ))) : null }   */}
+                ))) : null }  
             </tbody>
           </table>
           </div>)
