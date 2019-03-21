@@ -32,13 +32,14 @@ class StairForm extends Component {
     db.collection("users").doc(uid).get().then((user) => {
         const climbData = [];
         const userClimbs = user.data().climbs;
-        userClimbs.forEach((climb) => {
-          const climbDate = climb.date;
-          climbData.push({ 
-            date: climbDate,
-            floors: parseInt(climb.floors)
+        if(userClimbs) {
+          userClimbs.forEach(climb => {
+            climbData.push({ 
+              date: climb.date,
+              floors: [...climb.floors]
+            })
           })
-        })
+        }
 
         this.setState({
           climbs: climbData
@@ -78,25 +79,48 @@ class StairForm extends Component {
     })
   }
 
+  updateClimbs(climbsState) {
+    if(climbsState) {
+      if(climbsState.find(climb => climb.date === this.state.date)) {
+        climbsState.forEach(climb => {
+          if(climb.date === this.state.date) {
+            climb.floors.push(parseInt(this.state.floors))
+          }
+        })
+      } else {
+        climbsState.push({
+          date: this.state.date,
+          floors: [this.state.floors]
+        })
+      }
+    } else {
+      climbsState = [{
+        date: this.state.date,
+        floors: [this.state.floors]
+      }]
+    }
+
+    this.setState({
+      climbs: climbsState
+    })
+  }
+
   handleSubmit(event) {
     event.preventDefault();
     if(this.state.floors === 0) {
       return;
     }
 
+    this.updateClimbs(this.state.climbs)
+
     const db = firebaseApp.firestore();
 
     db.collection("users").doc(this.state.googleUser.uid).set({
       uid: this.state.googleUser.uid,
       name: this.state.googleUser.displayName,
-      climbs: [...this.state.climbs, {
-        date: this.state.date,
-        floors: parseInt(this.state.floors)
-      }]
+      climbs: this.state.climbs
     })
-    this.setState({
-      floors: 0
-    })
+
     this.props.history.push("/user-dashboard");
   }
 

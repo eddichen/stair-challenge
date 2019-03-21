@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {firebaseApp, auth, provider} from '../base';
+import { firebaseApp, auth } from '../base';
 
 class UserDashboard extends Component {
   constructor() {
@@ -31,6 +31,12 @@ class UserDashboard extends Component {
     })
   }
 
+  calcDailyFloorCount(climbs) {
+    return climbs.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue
+    })
+  }
+
   render() {
     return(
       <div>
@@ -49,7 +55,7 @@ class UserDashboard extends Component {
                 {this.state.climbs !== null ? (this.state.climbs.map((climb, index) => (
                   <tr key={index}>
                     <td>{climb.date}</td> 
-                    <td>{climb.floors}</td> 
+                    <td>{this.calcDailyFloorCount(climb.floors)}</td> 
                   </tr>
                 ))) : null }  
             </tbody>
