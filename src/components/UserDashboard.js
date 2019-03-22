@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { firebaseApp, auth } from '../base';
+import Chart from "./Chart";
 
 class UserDashboard extends Component {
   constructor() {
@@ -7,7 +8,9 @@ class UserDashboard extends Component {
 
     this.state = {
       googleUser: null,
-      climbs: null
+      climbs: null,
+      chartData: null,
+      chartLabels: null
     }
   }
 
@@ -27,13 +30,30 @@ class UserDashboard extends Component {
     db.collection("users").doc(uid).get().then((user) => {
       this.setState({
         climbs: user.data().climbs
-      })
+      }, 
+      this.separateDataFromLabels)
     })
   }
 
   calcDailyFloorCount(climbs) {
     return climbs.reduce((accumulator, currentValue) => {
       return accumulator + currentValue
+    })
+  }
+
+  separateDataFromLabels() {
+    const dataSet = this.state.climbs;
+    let labels = [];
+    let floors = [];
+
+    dataSet.forEach(entry => {
+      labels.push(entry.date);
+      floors.push(this.calcDailyFloorCount(entry.floors));
+    })
+
+    this.setState({
+      chartLabels: labels,
+      chartData: floors
     })
   }
 
@@ -44,6 +64,7 @@ class UserDashboard extends Component {
         {this.state.googleUser ?
           (<div>
           <h2>Hi {this.state.googleUser.displayName}</h2>
+          {this.state.chartData !== null ? (<Chart chartLabels={this.state.chartLabels} chartData={this.state.chartData}  />) : null }
           <table>
             <thead>
               <tr>
