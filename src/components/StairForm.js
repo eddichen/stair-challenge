@@ -143,6 +143,7 @@ class StairForm extends Component {
           </div>)
         :
           (<div>
+            <p>You must be logged in to log your stair climb</p>
             <button type="button" onClick={this.signIn}>Login</button>
           </div>)
         }

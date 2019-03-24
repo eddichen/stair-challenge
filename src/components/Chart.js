@@ -8,9 +8,6 @@ class Chart extends Component {
     const svgHeight = 300
     const barPadding = 0
     const barWidth = ((svgWidth - 20) / chartData.length)
-    //const parseDate = d3.timeFormat("%d %b")
-
-    console.log('chartData', chartData)
 
     const svg = d3.select('svg')
       .attr("width", svgWidth)
