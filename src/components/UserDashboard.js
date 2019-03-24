@@ -9,8 +9,7 @@ class UserDashboard extends Component {
     this.state = {
       googleUser: null,
       climbs: null,
-      chartData: null,
-      chartLabels: null
+      chartData: null
     }
   }
 
@@ -28,8 +27,12 @@ class UserDashboard extends Component {
     const uid = this.state.googleUser.uid;
 
     db.collection("users").doc(uid).get().then((user) => {
+      const sortedDates = user.data().climbs.sort((a, b) => {
+        return new Date(a.date) - new Date(b.date)
+      });
+
       this.setState({
-        climbs: user.data().climbs
+        climbs: sortedDates
       }, 
       this.separateDataFromLabels)
     })
@@ -43,17 +46,17 @@ class UserDashboard extends Component {
 
   separateDataFromLabels() {
     const dataSet = this.state.climbs;
-    let labels = [];
-    let floors = [];
+    let data = [];
 
     dataSet.forEach(entry => {
-      labels.push(entry.date);
-      floors.push(this.calcDailyFloorCount(entry.floors));
+      data.push({ 
+        date: entry.date,
+        floors: this.calcDailyFloorCount(entry.floors)
+      });
     })
 
     this.setState({
-      chartLabels: labels,
-      chartData: floors
+      chartData: data
     })
   }
 
@@ -64,7 +67,7 @@ class UserDashboard extends Component {
         {this.state.googleUser ?
           (<div>
           <h2>Hi {this.state.googleUser.displayName}</h2>
-          {this.state.chartData !== null ? (<Chart chartLabels={this.state.chartLabels} chartData={this.state.chartData}  />) : null }
+          {this.state.chartData !== null ? (<Chart chartData={this.state.chartData}  />) : null }
           <table>
             <thead>
               <tr>

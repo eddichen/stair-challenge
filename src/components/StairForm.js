@@ -90,13 +90,13 @@ class StairForm extends Component {
       } else {
         climbsState.push({
           date: this.state.date,
-          floors: [this.state.floors]
+          floors: [parseInt(this.state.floors)]
         })
       }
     } else {
       climbsState = [{
         date: this.state.date,
-        floors: [this.state.floors]
+        floors: [parseInt(this.state.floors)]
       }]
     }
 
@@ -135,7 +135,7 @@ class StairForm extends Component {
             <h1>Hi {this.state.googleUser.displayName}</h1>
             <form className="form" action="" onSubmit={this.handleSubmit}>
               <label htmlFor="floors">How many floors have you climbed?</label>
-              <input type="number" id="floors" name="floors" onChange={this.handleChange} value={this.state.floors} required />
+              <input type="number" id="floors" name="floors" max="8" min="1" onChange={this.handleChange} value={this.state.floors} required />
               <label htmlFor="">When did you do this?</label> 
               <input type="date" id="date" name="date" value={this.state.date} onChange={this.handleChange} required />
               <button type="submit">Submit</button>
