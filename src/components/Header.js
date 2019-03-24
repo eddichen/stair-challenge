@@ -10,6 +10,10 @@ class Header extends Component {
     }
   }
 
+  signIn() {
+    auth.signInWithRedirect(provider);
+  }
+
   componentDidMount() {
     auth.onAuthStateChanged((googleUser) => {
       if (googleUser) {
@@ -24,7 +28,10 @@ class Header extends Component {
         <h1>{ this.props.title }</h1>
 
         {this.state.googleUser ?
-          (<button type="button" onClick={this.signOut}>Log out</button>) 
+          (<div>
+            <img src={this.state.googleUser.photoURL} alt={`${this.state.googleUser.displayName}`} /> 
+            {/* <button type="button" onClick={this.signOut}>Log out</button> */}
+          </div>) 
           :
           (<button type="button" onClick={this.signIn}>Login</button>)
         }

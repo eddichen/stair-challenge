@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {firebaseApp, auth, provider} from '../base';
+import Header from "./Header";
 
 class StairForm extends Component {
   constructor() {
@@ -127,12 +128,10 @@ class StairForm extends Component {
   render() {
     return (
       <div>
-        <h1>Stair form</h1>
+        <Header title="Log" />
         {this.state.googleUser ?
           (<div>
-            <button type="button" onClick={this.signOut}>Log out</button>
-            {/* <img src={this.state.user.photoURL} alt={`${this.state.user.displayName}`} /> */}
-            <h1>Hi {this.state.googleUser.displayName}</h1>
+            <h1>Hi {this.state.googleUser.displayName},</h1>
             <form className="form" action="" onSubmit={this.handleSubmit}>
               <label htmlFor="floors">How many floors have you climbed?</label>
               <input type="number" id="floors" name="floors" max="8" min="1" onChange={this.handleChange} value={this.state.floors} required />
@@ -143,7 +142,8 @@ class StairForm extends Component {
           </div>)
         :
           (<div>
-            <p>You must be logged in to log your stair climb</p>
+            <h1>Hey there,</h1>
+            <p>To get started, log in with your Google account to log your stair climb</p>
             <button type="button" onClick={this.signIn}>Login</button>
           </div>)
         }
