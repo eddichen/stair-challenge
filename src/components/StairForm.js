@@ -168,9 +168,15 @@ class StairForm extends Component {
           </Grid>)
         :
           (<Grid container className={classes.container}>
-            <h1>Hey there,</h1>
-            <p>To get started, log in with your Google account to log your stair climb</p>
-            <Button type="button" variant="contained" color="primary" onClick={this.signIn}>Login</Button>
+            <Grid item xs={12}>
+              <Typography variant="h4">Hey there,</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body1">To get started, log in with your Google account to log your stair climb</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Button type="button" variant="contained" color="primary" onClick={this.signIn}>Login</Button>
+            </Grid>
           </Grid>)
         }
       </div>
