@@ -1,6 +1,17 @@
 import React, { Component } from 'react';
 import {firebaseApp, auth, provider} from '../base';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
 import Header from "./Header";
+
+const styles = () => ({
+  container: {
+    paddingTop: 100
+  }
+})
 
 class StairForm extends Component {
   constructor() {
@@ -126,30 +137,45 @@ class StairForm extends Component {
   }
 
   render() {
+    const {classes} = this.props;
+
     return (
       <div>
         <Header title="Log" />
         {this.state.googleUser ?
-          (<div>
-            <h1>Hi {this.state.googleUser.displayName},</h1>
+          (<Grid container className={classes.container} spacing={16}>
+            <Grid item xs={12}>
+              <Typography variant="h4">Hi {this.state.googleUser.displayName},</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="body1">Log your individual stair climbs in floors below:</Typography>
+            </Grid>
+            <Grid item xs={12}>
             <form className="form" action="" onSubmit={this.handleSubmit}>
-              <label htmlFor="floors">How many floors have you climbed?</label>
-              <input type="number" id="floors" name="floors" max="8" min="1" onChange={this.handleChange} value={this.state.floors} required />
-              <label htmlFor="">When did you do this?</label> 
-              <input type="date" id="date" name="date" value={this.state.date} onChange={this.handleChange} required />
-              <button type="submit">Submit</button>
+              <Grid container spacing={16}>
+                <Grid item xs={12}>
+                  <TextField type="number" id="floors" name="floors" max="8" min="1" label="Floors climbed:" onChange={this.handleChange} value={this.state.floors} required />
+                </Grid>
+                <Grid item xs={12}>
+                  <TextField type="date" id="date" name="date" label="Date:" onChange={this.handleChange} value={this.state.date} required />
+                </Grid>
+                <Grid item xs={12}>
+                  <Button type="submit" variant="contained" color="primary">Submit</Button>
+                </Grid>
+              </Grid>
             </form>
-          </div>)
+            </Grid>
+          </Grid>)
         :
-          (<div>
+          (<Grid container className={classes.container}>
             <h1>Hey there,</h1>
             <p>To get started, log in with your Google account to log your stair climb</p>
-            <button type="button" onClick={this.signIn}>Login</button>
-          </div>)
+            <Button type="button" variant="contained" color="primary" onClick={this.signIn}>Login</Button>
+          </Grid>)
         }
       </div>
     )
   }
 }
 
-export default StairForm;
+export default withStyles(styles)(StairForm);

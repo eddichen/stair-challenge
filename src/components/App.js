@@ -1,8 +1,16 @@
 import React, { Component } from 'react';
-import { BrowserRouter as Route, Link } from "react-router-dom";
 import { firebaseApp } from '../base';
+import { Route } from 'react-router-dom';
 import Header from "./Header";
-import StairForm from "./StairForm";
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+
+const styles = () => ({
+  container: {
+    paddingTop: 100
+  }
+})
 
 class App extends Component {
   constructor() {
@@ -34,14 +42,19 @@ class App extends Component {
   }
 
   render() {
+    const {classes} = this.props;
+
     return (
       <div>
-        <Header title="Stair Challenge" />
-        <Link to="/stair-form">Log your stair climb</Link>
-        <Route path="/stair-form" component={ StairForm } />
+        <Header title="Stair Challenge" {...this.props} />
+        <Grid container className={classes.container} justify="center">
+          <Route render={({history}) => (          
+            <Button variant="contained" color="primary" onClick={() => {history.push('/stair-form')}}>Log your stair climb</Button>
+          )} />
+        </Grid>
       </div>
     )
   }
 }
 
-export default App;
+export default withStyles(styles)(App);
