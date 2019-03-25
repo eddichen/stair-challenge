@@ -1,6 +1,22 @@
 import React, { Component } from 'react';
 import { firebaseApp, auth } from '../base';
+import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
+import Typography from '@material-ui/core/Typography';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import Button from '@material-ui/core/Button';
+import Header from "./Header";
 import Chart from "./Chart";
+
+const styles = () => ({
+  container: {
+    paddingTop: 100
+  }
+})
 
 class UserDashboard extends Component {
   constructor() {
@@ -61,38 +77,48 @@ class UserDashboard extends Component {
   }
 
   render() {
+    const {classes} = this.props;
+
     return(
       <div>
-        <h1>Dashboard</h1>
+        <Header title="Dashboard" />
         {this.state.googleUser ?
-          (<div>
-          <h2>Hi {this.state.googleUser.displayName}</h2>
-          {this.state.chartData !== null ? (<Chart chartData={this.state.chartData}  />) : null }
-          <table>
-            <thead>
-              <tr>
-                <td>Date</td>
-                <td>Floors</td>             
-              </tr>
-            </thead>
-            <tbody>
-                {this.state.climbs !== null ? (this.state.climbs.map((climb, index) => (
-                  <tr key={index}>
-                    <td>{climb.date}</td> 
-                    <td>{this.calcDailyFloorCount(climb.floors)}</td> 
-                  </tr>
-                ))) : null }  
-            </tbody>
-          </table>
-          </div>)
+          (<Grid container className={classes.container} spacing={16}>
+            <Grid item xs={12}>
+              <Typography variant="h4">{this.state.googleUser.displayName}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              {this.state.chartData !== null ? (<Chart chartData={this.state.chartData}  />) : null }
+            </Grid>
+            <Grid item xs={12}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Date</TableCell>
+                    <TableCell>Floors</TableCell>             
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                    {this.state.climbs !== null ? (this.state.climbs.map((climb, index) => (
+                      <TableRow key={index}>
+                        <TableCell>{climb.date}</TableCell> 
+                        <TableCell>{this.calcDailyFloorCount(climb.floors)}</TableCell> 
+                      </TableRow>
+                    ))) : null }  
+                </TableBody>
+              </Table>
+            </Grid>
+          </Grid>)
           :
-          (<div>
-            <button type="button" onClick={this.signIn}>Login</button>
-          </div>)
+          (<Grid container className={classes.container} spacing={16}>>
+            <Grid item>
+              <Button variant="contained" color="primary" onClick={this.signIn}>Login</Button>
+            </Grid>
+          </Grid>)
         }
       </div>
     )
   }
 }
 
-export default UserDashboard;
+export default withStyles(styles)(UserDashboard);
