@@ -34,11 +34,14 @@ class UserDashboard extends Component {
     const db = firebaseApp.firestore();
     const uid = this.state.googleUser.uid;
 
-    db.collection("users").doc(uid).get().then((user) => {
-      this.setState({
-        climbs: user.data().climbs
-      }, 
-      this.separateDataFromLabels)
+    db.collection("users").get().then((user) => {
+      user.docs.forEach(user => {
+        if(user.id === uid) {
+          this.setState({
+            climbs: user.data().climbs
+          })
+        }
+      })
     })
   }
 
@@ -62,6 +65,13 @@ class UserDashboard extends Component {
     this.setState({
       chartData: data
     })
+  }
+
+  signOut(history) {
+    if(auth.currentUser) {
+      auth.signOut();
+      history.push('/');
+    }
   }
 
   componentDidMount() {
@@ -109,12 +119,15 @@ class UserDashboard extends Component {
               <Route render={({history}) => (          
                 <Button variant="contained" color="primary" onClick={() => {history.push('/stair-form')}}>Log your stair climb</Button>
               )} />
+              <Route render={({history}) => (          
+                <Button variant="contained" color="primary" onClick={() => this.signOut(history) }>Log out</Button>
+              )} />
             </Grid>
           </Grid>)
           :
-          (<Grid container className={classes.container} spacing={16}>>
+          (<Grid container className={classes.container} spacing={16}>
             <Grid item>
-              <Button variant="contained" color="primary" onClick={this.signIn}>Login</Button>
+              <Typography variant="body1">Please log in to see your dashboard</Typography>
             </Grid>
           </Grid>)
         }

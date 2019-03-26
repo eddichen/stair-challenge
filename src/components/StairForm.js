@@ -52,17 +52,6 @@ class StairForm extends Component {
     })
   }
 
-  signIn() {
-    auth.signInWithRedirect(provider);
-  }
-
-  signOut() {
-    if(auth.currentUser) {
-      auth.signOut();
-      window.location.reload(true);
-    }
-  }
-
   getDefaultDate() {
     const todaysDate = new Date()
     let day = todaysDate.getDate()
@@ -216,9 +205,6 @@ class StairForm extends Component {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="body1">To get started, log in with your Google account to log your stair climb</Typography>
-            </Grid>
-            <Grid item xs={12}>
-              <Button type="button" variant="contained" color="primary" onClick={this.signIn}>Login</Button>
             </Grid>
           </Grid>)
         }
