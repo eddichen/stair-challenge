@@ -28,22 +28,38 @@ class App extends Component {
 
   getUserData() {
     const db = firebaseApp.firestore();
+    let userDetails = []
 
     db.collection("users").get().then((querySnapshot) => {
-      let userDetails = []
-
       querySnapshot.forEach(doc => {
         userDetails.push(doc.data())
       })
 
-      //sorting the user in descending order according to climbTotals
-      let usersRanked = userDetails.sort((a, b) => {
-        return b.climbTotals - a.climbTotals
-      })
+      this.orderUsers(userDetails)
+    })
+  }
 
-      this.setState({
-        users: usersRanked
-      })
+  orderUsers(userDetails) {
+    const date = new Date()
+    const year = date.getFullYear()
+    const month = ("0" + (date.getMonth() + 1)).slice(-2)
+    const currentMonth = `${year}-${month}`
+    let usersRanked = userDetails;
+    
+    //adding an easily accessible monthly total to the user object
+    usersRanked.forEach(user => {
+      if(user.climbTotals[currentMonth] !== undefined) {
+        user.monthlyTotal = user.climbTotals[currentMonth]
+      }
+    })
+
+    //sorting the user in descending order according to climbTotals
+    usersRanked.sort((a, b) => {
+      return b.monthlyTotal - a.monthlyTotal
+    })
+
+    this.setState({
+      users: usersRanked
     })
   }
 
@@ -68,7 +84,7 @@ class App extends Component {
                   {this.state.users.map((user, index) => (
                     <TableRow key={index}>
                       <TableCell>{user.name}</TableCell>
-                      <TableCell>{user.climbTotals}</TableCell>
+                      <TableCell>{user.monthlyTotal}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
