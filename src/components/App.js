@@ -22,7 +22,8 @@ class App extends Component {
     super()
 
     this.state = {
-      users: null
+      users: null,
+      currentMonth: null
     }
   }
 
@@ -63,7 +64,17 @@ class App extends Component {
     })
   }
 
+  getCurrentMonth() {
+    const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]
+    const currentMonth = new Date().getMonth()
+
+    this.setState({
+      currentMonth: months[currentMonth]
+    })
+  }
+
   componentDidMount() {
+    this.getCurrentMonth()
     this.getUserData()
   }
 
@@ -75,7 +86,7 @@ class App extends Component {
         <Header title="Stair Challenge" {...this.props} />
         <Grid container className={classes.container} spacing={16}>
           <Grid item xs={12}>
-            <Typography variant="h4">Leaderboard</Typography>
+            <Typography variant="h4">Leaderboard for {this.state.currentMonth}</Typography>
           </Grid>
           {this.state.users !== null ? (
             <Grid item xs={12}>
