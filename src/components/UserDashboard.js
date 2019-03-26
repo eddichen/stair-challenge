@@ -30,26 +30,13 @@ class UserDashboard extends Component {
     }
   }
 
-  componentDidMount() {
-    auth.onAuthStateChanged((googleUser) => {
-      if (googleUser) {
-        this.setState({ googleUser });
-        this.getClimbData();
-      } 
-    });
-  }
-
   getClimbData() {
     const db = firebaseApp.firestore();
     const uid = this.state.googleUser.uid;
 
     db.collection("users").doc(uid).get().then((user) => {
-      const sortedDates = user.data().climbs.sort((a, b) => {
-        return new Date(a.date) - new Date(b.date)
-      });
-
       this.setState({
-        climbs: sortedDates
+        climbs: user.data().climbs
       }, 
       this.separateDataFromLabels)
     })
@@ -75,6 +62,15 @@ class UserDashboard extends Component {
     this.setState({
       chartData: data
     })
+  }
+
+  componentDidMount() {
+    auth.onAuthStateChanged((googleUser) => {
+      if (googleUser) {
+        this.setState({ googleUser });
+        this.getClimbData();
+      } 
+    });
   }
 
   render() {

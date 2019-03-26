@@ -104,15 +104,40 @@ class StairForm extends Component {
         floors: [parseInt(this.state.floors)]
       }]
     }
+
+    //sorting the dates in descending order
+    climbsState.sort((a, b) => {
+      return new Date(a.date) - new Date(b.date)
+    })
+    
     return climbsState;
   }
 
   calculateTotals(climbs) {
-    const totalsArray = climbs.reduce((accumulator, currentValue) => {
+    const findMonthYear = /\d{4}-\d{2}/
+    const formMonthYear = findMonthYear.exec(this.state.date)
+
+    //filter climbs by the month
+    const formMonthClimbs = climbs.filter(climb => {
+      const climbMonthYear = findMonthYear.exec(climb.date)
+      return climbMonthYear[0] === formMonthYear[0]
+    })
+
+    const formMonthFloors = this.sumFloors(formMonthClimbs)
+    const allFloors = this.sumFloors(climbs)
+    
+    return {
+      all: allFloors,
+      [formMonthYear[0]]: formMonthFloors
+    }
+  }
+
+  sumFloors(climbs) {
+    const climbTotals = climbs.reduce((accumulator, currentValue) => {
       return [...accumulator, ...currentValue.floors]
     }, []);
 
-    return totalsArray.reduce((accumulator, currentValue) => {
+    return climbTotals.reduce((accumulator, currentValue) => {
       return accumulator + currentValue
     })
   }
