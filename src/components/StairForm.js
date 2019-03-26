@@ -21,21 +21,14 @@ class StairForm extends Component {
       googleUser: null,
       floors: 0,
       date: this.getDefaultDate(),
-      climbs: null
+      climbs: null,
+      climbTotals: 0,
+      submit: false
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }  
-
-  componentDidMount() {
-    auth.onAuthStateChanged((googleUser) => {
-      if (googleUser) {
-        this.setState({ googleUser });
-        this.getUserData();
-      } 
-    });
-  }
 
   getUserData() {
     const db = firebaseApp.firestore();
@@ -92,7 +85,7 @@ class StairForm extends Component {
   }
 
   updateClimbs(climbsState) {
-    if(climbsState) {
+    if(climbsState !== null) {
       if(climbsState.find(climb => climb.date === this.state.date)) {
         climbsState.forEach(climb => {
           if(climb.date === this.state.date) {
@@ -111,9 +104,16 @@ class StairForm extends Component {
         floors: [parseInt(this.state.floors)]
       }]
     }
+    return climbsState;
+  }
 
-    this.setState({
-      climbs: climbsState
+  calculateTotals(climbs) {
+    const totalsArray = climbs.reduce((accumulator, currentValue) => {
+      return [...accumulator, ...currentValue.floors]
+    }, []);
+
+    return totalsArray.reduce((accumulator, currentValue) => {
+      return accumulator + currentValue
     })
   }
 
@@ -123,17 +123,35 @@ class StairForm extends Component {
       return;
     }
 
-    this.updateClimbs(this.state.climbs)
-
-    const db = firebaseApp.firestore();
-
-    db.collection("users").doc(this.state.googleUser.uid).set({
-      uid: this.state.googleUser.uid,
-      name: this.state.googleUser.displayName,
-      climbs: this.state.climbs
+    this.setState({
+      climbs: this.updateClimbs(this.state.climbs),
+      climbTotals: this.calculateTotals(this.state.climbs),
+      submit: true
     })
+  }
 
-    this.props.history.push("/user-dashboard");
+  componentDidMount() {
+    auth.onAuthStateChanged((googleUser) => {
+      if (googleUser) {
+        this.setState({ googleUser });
+        this.getUserData();
+      } 
+    });
+  }
+
+  componentDidUpdate() {
+    if(this.state.submit) {
+      const db = firebaseApp.firestore();
+
+      db.collection("users").doc(this.state.googleUser.uid).set({
+        uid: this.state.googleUser.uid,
+        name: this.state.googleUser.displayName,
+        climbs: this.state.climbs,
+        climbTotals: this.state.climbTotals
+      })
+
+      this.props.history.push("/user-dashboard");
+    }
   }
 
   render() {
@@ -167,7 +185,7 @@ class StairForm extends Component {
             </Grid>
           </Grid>)
         :
-          (<Grid container className={classes.container}>
+          (<Grid container className={classes.container} spacing={16}>
             <Grid item xs={12}>
               <Typography variant="h4">Hey there,</Typography>
             </Grid>

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { firebaseApp, auth } from '../base';
+import { Route } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -107,6 +108,11 @@ class UserDashboard extends Component {
                     ))) : null }  
                 </TableBody>
               </Table>
+            </Grid>
+            <Grid item xs={12}>
+              <Route render={({history}) => (          
+                <Button variant="contained" color="primary" onClick={() => {history.push('/stair-form')}}>Log your stair climb</Button>
+              )} />
             </Grid>
           </Grid>)
           :
