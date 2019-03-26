@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {firebaseApp, auth, provider} from '../base';
+import { firebaseApp, auth } from '../base';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
@@ -22,7 +22,7 @@ class StairForm extends Component {
       floors: 0,
       date: this.getDefaultDate(),
       climbs: null,
-      climbTotals: 0,
+      climbTotals: null,
       submit: false
     }
 
@@ -34,21 +34,25 @@ class StairForm extends Component {
     const db = firebaseApp.firestore();
     const uid = this.state.googleUser.uid;
 
-    db.collection("users").doc(uid).get().then((user) => {
-        const climbData = [];
-        const userClimbs = user.data().climbs;
-        if(userClimbs) {
-          userClimbs.forEach(climb => {
-            climbData.push({ 
-              date: climb.date,
-              floors: [...climb.floors]
+    db.collection("users").get().then((user) => {
+      user.docs.forEach(user => {
+        if(user.id === uid) {
+          const climbData = [];
+          const userClimbs = user.data().climbs;
+          if(userClimbs) {
+            userClimbs.forEach(climb => {
+              climbData.push({ 
+                date: climb.date,
+                floors: [...climb.floors]
+              })
             })
-          })
-        }
 
-        this.setState({
-          climbs: climbData
-        })
+            this.setState({
+              climbs: climbData
+            })
+          }
+        }
+      })
     })
   }
 
@@ -106,18 +110,25 @@ class StairForm extends Component {
     const findMonthYear = /\d{4}-\d{2}/
     const formMonthYear = findMonthYear.exec(this.state.date)
 
-    //filter climbs by the month
-    const formMonthClimbs = climbs.filter(climb => {
-      const climbMonthYear = findMonthYear.exec(climb.date)
-      return climbMonthYear[0] === formMonthYear[0]
-    })
+    if(climbs) {
+      //filter climbs by the month
+      const formMonthClimbs = climbs.filter(climb => {
+        const climbMonthYear = findMonthYear.exec(climb.date)
+        return climbMonthYear[0] === formMonthYear[0]
+      })
 
-    const formMonthFloors = this.sumFloors(formMonthClimbs)
-    const allFloors = this.sumFloors(climbs)
-    
-    return {
-      all: allFloors,
-      [formMonthYear[0]]: formMonthFloors
+      const formMonthFloors = this.sumFloors(formMonthClimbs)
+      const allFloors = this.sumFloors(climbs)
+      
+      return {
+        all: allFloors,
+        [formMonthYear[0]]: formMonthFloors
+      }
+    } else {
+      return {
+        all: this.state.floors,
+        [formMonthYear[0]]: this.state.floors
+      }
     }
   }
 
