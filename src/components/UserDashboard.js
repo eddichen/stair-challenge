@@ -11,7 +11,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
 import Header from "./Header";
-import Chart from "./Chart";
+import Chart from "./Chart/Chart";
 
 const styles = () => ({
   container: {
@@ -51,10 +51,9 @@ class UserDashboard extends Component {
     })
   }
 
-  separateDataFromLabels() {
-    const dataSet = this.state.climbs;
+  separateDataFromLabels(dataSet) {
     let data = [];
-
+    
     dataSet.forEach(entry => {
       data.push({ 
         date: entry.date,
@@ -81,6 +80,12 @@ class UserDashboard extends Component {
         this.getClimbData();
       } 
     });
+  }
+
+  componentDidUpdate() {
+    if(this.state.climbs !== null && this.state.chartData === null) {
+      this.separateDataFromLabels(this.state.climbs)
+    }
   }
 
   render() {
@@ -116,12 +121,14 @@ class UserDashboard extends Component {
               </Table>
             </Grid>
             <Grid item xs={12}>
-              <Route render={({history}) => (          
-                <Button variant="contained" color="primary" onClick={() => {history.push('/stair-form')}}>Log your stair climb</Button>
-              )} />
-              <Route render={({history}) => (          
-                <Button variant="contained" color="primary" onClick={() => this.signOut(history) }>Log out</Button>
-              )} />
+              <Grid container justify="space-between">
+                <Route render={({history}) => (          
+                  <Button variant="contained" color="primary" onClick={() => {history.push('/stair-form')}}>Log your stair climb</Button>
+                )} />
+                <Route render={({history}) => (          
+                  <Button variant="contained" color="primary" onClick={() => this.signOut(history) }>Log out</Button>
+                )} />
+              </Grid>
             </Grid>
           </Grid>)
           :

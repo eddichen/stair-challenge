@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import * as d3 from 'd3';
+import './Chart.css';
 
 class Chart extends Component {
   constructor() {
@@ -8,14 +9,13 @@ class Chart extends Component {
     this.default_width = 600
     this.default_height = 338
     this.default_ratio = this.default_width / this.default_height
-    this.margin = {top: 16, right: 16, bottom: 16, left: 16}
+    this.margin = {top: 16, right: 16, bottom: 16, left: 25}
 
     this.state = {
       width: this.default_width - this.margin.left - this.margin.right,
       height: this.default_height - this.margin.top - this.margin.bottom
     }
-  }
-  
+  } 
 
   set_vars() {
     const current_width = window.innerWidth;
@@ -43,22 +43,22 @@ class Chart extends Component {
   createChart() {
     const chartData = this.getMonthChartData(this.props.chartData);
     const barPadding = 0
-    const barWidth = ((this.state.width - 20) / chartData.length)
+    const barWidth = ((this.state.width - this.margin.right) / chartData.length)
 
-    const svg = d3.select('svg')
+    const svg = d3.select('.bar-chart')
       .attr("width", this.state.width + this.margin.left + this.margin.right)
       .attr("height", this.state.height + this.margin.top + this.margin.bottom);
 
     const xScale = d3.scaleTime()
       .domain(d3.extent(chartData, function(d) { return new Date(d.date) }))
-      .range([0, this.state.width - 21])
+      .range([0, this.state.width - this.margin.right])
 
     const yScale = d3.scaleLinear()
       .domain([d3.max(chartData, function(d) { return d.floors }), 0])
-      .range([0, this.state.height - 20]);
+      .range([0, this.state.height - this.margin.bottom - this.margin.top]);
 
     const xAxis = d3.axisBottom().scale(xScale)
-    const xAxisTranslate = this.state.height - 20
+    const xAxisTranslate = this.state.height - this.margin.bottom
 
     const yAxis = d3.axisLeft().scale(yScale)
 
@@ -73,17 +73,17 @@ class Chart extends Component {
         return yScale(0) - yScale(d.floors); 
       })
       .attr("width", barWidth - barPadding)
-      .attr("transform", function (d, i) {
-        var translate = [(barWidth * i) + 20, 0]; 
+      .attr("transform", (function (d, i) {
+        var translate = [(barWidth * i) + this.margin.left, this.margin.top]; 
         return "translate("+ translate +")";
-      });
+      }).bind(this));
     
     svg.append("g")
-      .attr("transform", "translate(20, 0)")
+      .attr("transform", `translate(${this.margin.left}, ${this.margin.top})`)
       .call(yAxis)
 
     svg.append("g")
-      .attr("transform", "translate(20," + xAxisTranslate + ")")
+      .attr("transform", `translate(${this.margin.left}, ${xAxisTranslate})`)
       .call(xAxis)
   }
 
@@ -136,8 +136,8 @@ class Chart extends Component {
     window.onresize = (function(event) {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout((function(){
-        let s = d3.selectAll('svg');
-        s = s.remove();
+        let s = d3.select('.bar-chart');
+        s.remove();
         _this.set_vars();
         _this.createChart();
       }), 100);
@@ -146,9 +146,7 @@ class Chart extends Component {
 
   render() {
     return(
-      <div>
-        <svg className="bar-chart"></svg>
-      </div>
+      <svg className="bar-chart"></svg>
     )
   }
 }
