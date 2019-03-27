@@ -107,14 +107,16 @@ class UserDashboard extends Component {
                 <TableHead>
                   <TableRow>
                     <TableCell>Date</TableCell>
-                    <TableCell>Floors</TableCell>             
+                    <TableCell>Floors</TableCell>
+                    <TableCell>Climbs</TableCell>             
                   </TableRow>
                 </TableHead>
                 <TableBody>
                     {this.state.climbs !== null ? (this.state.climbs.map((climb, index) => (
                       <TableRow key={index}>
                         <TableCell>{climb.date}</TableCell> 
-                        <TableCell>{this.calcDailyFloorCount(climb.floors)}</TableCell> 
+                        <TableCell>{this.calcDailyFloorCount(climb.floors)}</TableCell>
+                        <TableCell>{climb.floors.length}</TableCell>
                       </TableRow>
                     ))) : null }  
                 </TableBody>
