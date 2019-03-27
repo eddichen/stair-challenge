@@ -7,6 +7,8 @@ import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import HomeIcon from '@material-ui/icons/Home';
 
 class Header extends Component {
   constructor(props) {
@@ -33,7 +35,12 @@ class Header extends Component {
     return(
       <AppBar>
         <Toolbar>
-          <Grid container justify="space-between">
+          <Grid container justify="space-between" alignItems="center">
+            <Route render={({history}) => (
+              <IconButton onClick={() => {history.push('/')}}>
+                <HomeIcon color="disabled" />
+              </IconButton>
+            )} />
             <Typography variant="h6" color="inherit">{ this.props.title }</Typography>
 
             {this.state.googleUser ?
