@@ -130,18 +130,6 @@ class Chart extends Component {
   componentDidMount() {
     this.set_vars();
     this.createChart();
-    const _this = this;
-
-    let resizeTimer;
-    window.onresize = (function(event) {
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout((function(){
-        let s = d3.select('.bar-chart');
-        s.remove();
-        _this.set_vars();
-        _this.createChart();
-      }), 100);
-    })
   }
 
   render() {
