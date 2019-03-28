@@ -37,8 +37,12 @@ class UserDashboard extends Component {
     db.collection("users").get().then((user) => {
       user.docs.forEach(user => {
         if(user.id === uid) {
+          let userClimbs = user.data().climbs.sort((a, b) => {
+            return new Date(b.date) - new Date(a.date)
+          })
+          
           this.setState({
-            climbs: user.data().climbs
+            climbs: userClimbs
           })
         }
       })
