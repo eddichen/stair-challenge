@@ -73,6 +73,13 @@ class UserDashboard extends Component {
     }
   }
 
+  formatDate(date) {
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    let newDate = new Date(date);
+    return `${days[newDate.getDay()]} ${newDate.getDate()} ${months[newDate.getMonth()]}`
+  }
+
   componentDidMount() {
     auth.onAuthStateChanged((googleUser) => {
       if (googleUser) {
@@ -114,7 +121,7 @@ class UserDashboard extends Component {
                 <TableBody>
                     {this.state.climbs !== null ? (this.state.climbs.map((climb, index) => (
                       <TableRow key={index}>
-                        <TableCell>{climb.date}</TableCell> 
+                        <TableCell>{this.formatDate(climb.date)}</TableCell> 
                         <TableCell>{this.calcDailyFloorCount(climb.floors)}</TableCell>
                         <TableCell>{climb.floors.length}</TableCell>
                       </TableRow>
