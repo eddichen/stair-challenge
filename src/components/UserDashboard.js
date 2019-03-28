@@ -40,7 +40,7 @@ class UserDashboard extends Component {
           let userClimbs = user.data().climbs.sort((a, b) => {
             return new Date(b.date) - new Date(a.date)
           })
-          
+
           this.setState({
             climbs: userClimbs
           })
@@ -114,6 +114,7 @@ class UserDashboard extends Component {
               {this.state.chartData !== null ? (<Chart chartData={this.state.chartData}  />) : null }
             </Grid>
             <Grid item xs={12}>
+              <Typography variant="h5">History</Typography>
               <Table>
                 <TableHead>
                   <TableRow>

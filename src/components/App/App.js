@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { firebaseApp } from '../base';
+import { firebaseApp } from '../../base';
 import { Route } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
@@ -9,7 +9,9 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
-import Header from "./Header";
+import GradeIcon from '@material-ui/icons/Grade';
+import Header from "../Header";
+import './App.css';
 
 const styles = () => ({
   container: {
@@ -84,18 +86,26 @@ class App extends Component {
     return (
       <div>
         <Header title="Stair Challenge" {...this.props} />
-        <Grid container className={classes.container} spacing={16}>
+        <Grid container className={classes.container} spacing={16} justify="center">
           <Grid item xs={12}>
             <Typography variant="h4">Leaderboard for {this.state.currentMonth}</Typography>
           </Grid>
           {this.state.users !== null ? (
-            <Grid item xs={12}>
+            <Grid item xs={12} md={6}>
               <Table>
                 <TableBody>
                   {this.state.users.map((user, index) => (
                     <TableRow key={index}>
-                      <TableCell>{user.name}</TableCell>
-                      <TableCell>{user.monthlyTotal}</TableCell>
+                      <TableCell>
+                        {index < 2 ? <GradeIcon className={index === 0 ? "star star--first" : "star"} /> : null}                        
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1">{user.name}</Typography>
+                      </TableCell>
+                      <TableCell>
+                        <Typography variant="body1">{user.monthlyTotal}</Typography>
+                        <Typography variant="caption">FLOORS</Typography>
+                      </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
