@@ -13,6 +13,9 @@ import './App.css';
 const styles = () => ({
   container: {
     paddingTop: 100
+  },
+  title: {
+    textAlign: 'center'
   }
 });
 
@@ -87,20 +90,19 @@ class App extends Component {
       <div>
         <Header title="Stair Challenge" {...this.props} />
         <Grid container className={classes.container} spacing={16} justify="center">
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.title}>
             <Typography variant="h4">
-              Leaderboard for
-              {this.state.currentMonth}
+              Leaderboard for {this.state.currentMonth}
             </Typography>
           </Grid>
           {this.state.users !== null ? (
-            <Grid item xs={12} md={6}>
+            <Grid item xs={12} md={6} lg={5}>
               {this.state.users.map(user => (
                 <Grid container key={user.uid} spacing={16} alignItems="center">
-                  <Grid item xs={1}>
+                  <Grid item xs={2} md={1}>
                     <Avatar alt={`${user.name}`} src={user.avatar} />
                   </Grid>
-                  <Grid item xs={9}>
+                  <Grid item xs={8} md={9}>
                     <div className="progress">
                       <span style={this.progressWidth(user.monthlyTotal)} />
                     </div>
