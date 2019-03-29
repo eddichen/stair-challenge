@@ -171,6 +171,7 @@ class StairForm extends Component {
       db.collection("users").doc(this.state.googleUser.uid).set({
         uid: this.state.googleUser.uid,
         name: this.state.googleUser.displayName,
+        avatar: this.state.googleUser.photoURL,
         climbs: this.state.climbs,
         climbTotals: this.state.climbTotals
       })

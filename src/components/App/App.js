@@ -9,7 +9,7 @@ import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import Button from '@material-ui/core/Button';
-import GradeIcon from '@material-ui/icons/Grade';
+import Avatar from '@material-ui/core/Avatar';
 import Header from "../Header";
 import './App.css';
 
@@ -75,6 +75,11 @@ class App extends Component {
     })
   }
 
+  progressWidth(userTotal=0) {
+    const highestRankTotal = this.state.users[0].monthlyTotal
+    return { width: `${userTotal/highestRankTotal * 100}%` }
+  } 
+
   componentDidMount() {
     this.getCurrentMonth()
     this.getUserData()
@@ -92,24 +97,23 @@ class App extends Component {
           </Grid>
           {this.state.users !== null ? (
             <Grid item xs={12} md={6}>
-              <Table>
-                <TableBody>
-                  {this.state.users.map((user, index) => (
-                    <TableRow key={index}>
-                      <TableCell>
-                        {index < 2 ? <GradeIcon className={index === 0 ? "star star--first" : "star"} /> : null}                        
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">{user.name}</Typography>
-                      </TableCell>
-                      <TableCell>
-                        <Typography variant="body1">{user.monthlyTotal}</Typography>
-                        <Typography variant="caption">FLOORS</Typography>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              {this.state.users.map((user, index) => (
+                <Grid container key={index} spacing={16} alignItems="center">
+                  <Grid item xs={1}>
+                    <Avatar alt={`${user.name}`} src={user.avatar} />
+                  </Grid>
+                  <Grid item xs={9}>
+                    <div className="progress">
+                      <span style={this.progressWidth(user.monthlyTotal)}></span>
+                    </div>
+                    <Typography variant="body1">{user.name}</Typography>
+                  </Grid>
+                  <Grid item xs={2}>
+                    <Typography variant="body1">{user.monthlyTotal}</Typography>
+                    <Typography variant="caption">FLOORS</Typography>
+                  </Grid>
+                </Grid>
+              ))}
             </Grid>
           ): null}
           <Grid item xs={12}>

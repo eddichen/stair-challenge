@@ -1,7 +1,21 @@
-.star {
-    color: silver;
+.progress {
+    height: 10px;
+	position: relative;
+	background: #eceff1;
+	-moz-border-radius: 16px;
+	-webkit-border-radius: 16px;
+	border-radius: 16px;
+	padding: 0px;
 }
 
-.star--first {
-    color: gold;
+.progress > span {
+    display: block;
+    height: 100%;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    background-color: #e64a19;
+    position: relative;
+    overflow: hidden;
 }
