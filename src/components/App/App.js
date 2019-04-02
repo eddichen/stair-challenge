@@ -66,6 +66,8 @@ class App extends Component {
     usersRanked.forEach((user) => {
       if (user.climbTotals[currentMonth] !== undefined) {
         user.monthlyTotal = user.climbTotals[currentMonth];
+      } else {
+        user.monthlyTotal = 0
       }
     });
 
