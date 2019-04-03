@@ -51,6 +51,14 @@ class StairForm extends Component {
               climbs: climbData
             })
           }
+
+          const climbTotals = user.data().climbTotals;
+          console.log(climbTotals);
+          if(climbTotals) {
+            this.setState({
+              climbTotals: climbTotals
+            })
+          }
         }
       })
     })
@@ -121,11 +129,13 @@ class StairForm extends Component {
       const allFloors = this.sumFloors(climbs)
       
       return {
+        ...this.state.climbTotals,
         all: allFloors,
         [formMonthYear[0]]: formMonthFloors
       }
     } else {
       return {
+        ...this.state.climbTotals,
         all: this.state.floors,
         [formMonthYear[0]]: this.state.floors
       }
@@ -176,7 +186,7 @@ class StairForm extends Component {
         climbTotals: this.state.climbTotals
       })
 
-      this.props.history.push("/user-dashboard");
+      //this.props.history.push("/user-dashboard");
     }
   }
 
