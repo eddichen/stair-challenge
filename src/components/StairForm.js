@@ -186,7 +186,7 @@ class StairForm extends Component {
         climbTotals: this.state.climbTotals
       })
 
-      //this.props.history.push("/user-dashboard");
+      this.props.history.push("/user-dashboard");
     }
   }
 
